@@ -24,6 +24,7 @@ require (
 	github.com/aws/smithy-go v1.27.7
 	github.com/bboreham/go-loser v0.0.0-20230920113527-fcc2c21820a3
 	github.com/cespare/xxhash/v2 v2.3.0
+	github.com/cloudflare/cloudflared v0.0.0-20260306125340-d2a87e9b9345
 	github.com/dennwc/varint v1.0.0
 	github.com/digitalocean/godo v1.201.0
 	github.com/edsrzf/mmap-go v1.2.1-0.20241212181136-fad1cd13edbd
@@ -70,6 +71,7 @@ require (
 	github.com/prometheus/common/assets v0.2.0
 	github.com/prometheus/exporter-toolkit v0.17.1
 	github.com/prometheus/sigv4 v0.4.1
+	github.com/rs/zerolog v1.20.0
 	github.com/scaleway/scaleway-sdk-go v1.0.0-beta.37
 	github.com/shurcooL/httpfs v0.0.0-20230704072500-f1e31cf0ba5c
 	github.com/stackitcloud/stackit-sdk-go/core v0.26.0
@@ -110,9 +112,15 @@ require (
 )
 
 require (
+	github.com/coreos/go-oidc/v3 v3.17.0 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/gofrs/flock v0.13.0 // indirect
 	github.com/hashicorp/go-metrics v0.6.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sony/gobreaker/v2 v2.4.0 // indirect
+	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
 )
 

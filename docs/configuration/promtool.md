@@ -11,6 +11,15 @@ For instance, if you would like to check whether your local Prometheus server is
 promtool check healthy --url=http://localhost:9090 --http.config.file=http-config-file.yml
 ```
 
+If the target is instead protected by [Cloudflare Access](https://developers.cloudflare.com/cloudflare-one/policies/access/), set `authorization.type` to `cf-access` in the HTTP config file (leave `credentials`, `credentials_file`, and `credentials_ref` unset). This opens a browser to complete the Access login flow (or reuses a cached token if one is still valid) and attaches the resulting token to every request:
+```yaml
+authorization:
+  type: cf-access
+```
+```bash
+promtool check healthy --url=https://prometheus.example.com --http.config.file=cf-access-config-file.yml
+```
+
 The file is written in [YAML format](https://en.wikipedia.org/wiki/YAML), defined by the schema described below.
 Brackets indicate that a parameter is optional. For non-list parameters the value is set to the specified default.
 
@@ -41,6 +50,12 @@ basic_auth:
   [ password_ref: <string> ]
 
 # Optional the `Authorization` header configuration.
+#
+# `type: cf-access` is a promtool-specific extension: instead of setting the
+# `Authorization` header, promtool logs in to Cloudflare Access (opening a
+# browser, or reusing a cached token) and attaches the resulting token as a
+# `Cf-Access-Token` header. `credentials`, `credentials_file` and
+# `credentials_ref` must be unset when using `type: cf-access`.
 authorization:
   # Sets the authentication type.
   [ type: <string> | default: Bearer ]

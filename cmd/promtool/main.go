@@ -96,7 +96,7 @@ var (
 	lintConfigOptions = append(append([]string{}, lintRulesOptions...), lintOptionTooLongScrapeInterval)
 )
 
-const httpConfigFileDescription = "HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool"
+const httpConfigFileDescription = "HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool. To authenticate against a target behind Cloudflare Access, set authorization.type to \"cf-access\"."
 
 func main() {
 	var (
@@ -119,6 +119,7 @@ func main() {
 	).Default("5m").Duration()
 
 	experimental := app.Flag("experimental", "Enable experimental commands.").Bool()
+	httpDebug := app.Flag("http.debug", "Log outgoing HTTP requests and responses to stderr (credentials are redacted). Useful for diagnosing connectivity and authentication issues.").Bool()
 
 	sdCheckCmd := checkCmd.Command("service-discovery", "Perform service discovery for the given job name and report the results, including relabeling.")
 	sdConfigFile := sdCheckCmd.Arg("config-file", "The prometheus config file.").Required().ExistingFile()
@@ -347,10 +348,46 @@ func main() {
 			kingpin.Fatalf("Failed to load HTTP config file: %v", err)
 		}
 
+		// authorization.type: cf-access is a promtool-specific extension: it
+		// isn't a real HTTP Authorization scheme, so strip it out before
+		// building the round tripper for everything else (TLS, proxy,
+		// headers, etc.) and instead wrap the result with the Cloudflare
+		// Access round tripper below.
+		cfAccess := httpConfig.Authorization != nil && strings.EqualFold(strings.TrimSpace(httpConfig.Authorization.Type), cfAccessAuthType)
+		if cfAccess {
+			if httpConfig.Authorization.Credentials != "" || httpConfig.Authorization.CredentialsFile != "" || httpConfig.Authorization.CredentialsRef != "" {
+				kingpin.Fatalf("authorization credentials must not be set when authorization.type is %q", cfAccessAuthType)
+			}
+			httpConfig.Authorization = nil
+		}
+
 		httpRoundTripper, err = promconfig.NewRoundTripperFromConfig(*httpConfig, "promtool", promconfig.WithUserAgent(version.ComponentUserAgent("promtool")))
 		if err != nil {
 			kingpin.Fatalf("Failed to create a new HTTP round tripper: %v", err)
 		}
+
+		if cfAccess {
+			authURL := serverURL
+			if parsedCmd == pushMetricsCmd.FullCommand() {
+				authURL = remoteWriteURL
+			}
+			if authURL == nil {
+				kingpin.Fatalf("authorization.type: %s requires a target URL", cfAccessAuthType)
+			}
+
+			httpRoundTripper, err = newCFAccessRoundTripper(authURL, httpRoundTripper)
+			if err != nil {
+				kingpin.Fatalf("Failed to authenticate with Cloudflare Access: %v", err)
+			}
+		}
+	}
+
+	if *httpDebug {
+		// debugRoundTripper relies on httptrace to capture headers as they
+		// are written to the wire, so where it sits in the RoundTripper
+		// chain relative to other wrappers (authorization, cf-access, etc.)
+		// does not matter.
+		httpRoundTripper = &debugRoundTripper{next: httpRoundTripper}
 	}
 
 	for _, f := range *featureList {

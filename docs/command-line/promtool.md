@@ -12,6 +12,7 @@ Tooling for the Prometheus monitoring system.
 | <code class="text-nowrap">-h</code>, <code class="text-nowrap">--help</code> | Show context-sensitive help (also try --help-long and --help-man). |
 | <code class="text-nowrap">--version</code> | Show application version. |
 | <code class="text-nowrap">--experimental</code> | Enable experimental commands. |
+| <code class="text-nowrap">--http.debug</code> | Log outgoing HTTP requests and responses to stderr (credentials are redacted). Useful for diagnosing connectivity and authentication issues. |
 | <code class="text-nowrap">--enable-feature</code> <code class="text-nowrap">...</code> | Comma separated feature names to enable. Valid options: promql-experimental-functions, promql-delayed-name-removal, promql-extended-range-selectors. See https://prometheus.io/docs/prometheus/latest/feature_flags/ for more details |
 
 
@@ -141,7 +142,7 @@ Check if the Prometheus server is healthy.
 
 | Flag | Description | Default |
 | --- | --- | --- |
-| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool |  |
+| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool. To authenticate against a target behind Cloudflare Access, set authorization.type to "cf-access". |  |
 | <code class="text-nowrap">--url</code> | The URL for the Prometheus server. | `http://localhost:9090` |
 
 
@@ -157,7 +158,7 @@ Check if the Prometheus server is ready.
 
 | Flag | Description | Default |
 | --- | --- | --- |
-| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool |  |
+| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool. To authenticate against a target behind Cloudflare Access, set authorization.type to "cf-access". |  |
 | <code class="text-nowrap">--url</code> | The URL for the Prometheus server. | `http://localhost:9090` |
 
 
@@ -224,7 +225,7 @@ Run query against a Prometheus server.
 | Flag | Description | Default |
 | --- | --- | --- |
 | <code class="text-nowrap">-o</code>, <code class="text-nowrap">--format</code> | Output format of the query. | `promql` |
-| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool |  |
+| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool. To authenticate against a target behind Cloudflare Access, set authorization.type to "cf-access". |  |
 
 
 
@@ -416,7 +417,7 @@ Push to a Prometheus server.
 
 | Flag | Description |
 | --- | --- |
-| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool |
+| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool. To authenticate against a target behind Cloudflare Access, set authorization.type to "cf-access". |
 
 
 
@@ -687,7 +688,7 @@ Create blocks of data for new recording rules.
 
 | Flag | Description | Default |
 | --- | --- | --- |
-| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool |  |
+| <code class="text-nowrap">--http.config.file</code> | HTTP client configuration file, see details at https://prometheus.io/docs/prometheus/latest/configuration/promtool. To authenticate against a target behind Cloudflare Access, set authorization.type to "cf-access". |  |
 | <code class="text-nowrap">--url</code> | The URL for the Prometheus API with the data where the rule will be backfilled from. | `http://localhost:9090` |
 | <code class="text-nowrap">--start</code> | The time to start backfilling the new rule from. Must be a RFC3339 formatted date or Unix timestamp. Required. |  |
 | <code class="text-nowrap">--end</code> | If an end time is provided, all recording rules in the rule files provided will be backfilled to the end time. Default will backfill up to 3 hours ago. Must be a RFC3339 formatted date or Unix timestamp. |  |
