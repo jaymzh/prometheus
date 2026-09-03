@@ -110,10 +110,19 @@ require (
 )
 
 require (
+	github.com/cloudflare/cloudflared v0.0.0-20260306125340-d2a87e9b9345 // indirect
+	github.com/coreos/go-oidc/v3 v3.17.0 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/go-jose/go-jose/v4 v4.1.4 // indirect
 	github.com/gofrs/flock v0.13.0 // indirect
 	github.com/hashicorp/go-metrics v0.6.0 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	github.com/rs/zerolog v1.20.0 // indirect
+	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sony/gobreaker/v2 v2.4.0 // indirect
+	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20240726163527-a2c0da244d78 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 require (
@@ -272,3 +281,5 @@ exclude (
 )
 
 replace cloud.google.com/go => cloud.google.com/go v0.123.0
+
+replace github.com/prometheus/common => github.com/jaymzh/common v0.70.2-0.20260903230732-da55fa6f4fea
